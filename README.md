@@ -17,3 +17,4 @@ Exercise: Sliding window average
 
 ### Todo
 - Improve performance of PriorityWindowAverage.java
+- Accept endless series of records
