@@ -17,6 +17,14 @@ public class Point implements Comparable<Point>{
         return this.time.compareTo(o.time);
     }
 
+    @Override
+    public String toString() {
+        return "Point{" +
+                "value=" + value +
+                ", time=" + time +
+                '}';
+    }
+
     public Integer getValue() {
         return value;
     }

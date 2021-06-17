@@ -1,6 +1,5 @@
 package com.ha.slidingwindow;
 
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -11,11 +10,11 @@ public class MovingAverage {
 
     public MovingAverage(int length) {
         this.length = length;
-        queue = new LinkedList<>();
+        queue = new PriorityBlockingQueue<>();
         sum = 0;
     }
 
-    public double calc(Point point){
+    public double average(Point point){
         if (length == queue.size()){
             Point last = queue.remove();
             sum = sum - last.getValue();
