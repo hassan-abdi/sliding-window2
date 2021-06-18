@@ -20,7 +20,7 @@ A moving average is commonly used with time series data to smooth out short-term
 - Gradle
 
 ### Build Command
-#####Make sure docker machine is installed already.
+
 - To build and run tests
 > gradle clean build
 
