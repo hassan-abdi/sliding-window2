@@ -1,34 +1,31 @@
 package com.ha.slidingwindow;
 
-import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class ChronologicalMovingAverage<E extends ChronologicalRecord> implements MovingAverage<E> {
-    private final int windowLength;
+    private final Long timeFrameInMilliSeconds;
     private final Queue<E> queue;
     private Double sum;
 
-    public ChronologicalMovingAverage(int windowLength) {
-        this.windowLength = windowLength;
+    public ChronologicalMovingAverage(Long timeFrameInMilliSeconds) {
+        this.timeFrameInMilliSeconds = timeFrameInMilliSeconds;
         this.queue = new PriorityBlockingQueue<>();
         this.sum = 0D;
     }
 
     @Override
     public double next(E record) {
-        if (!queue.isEmpty()) {
-            while (getActualWindowSize(record) > windowLength) {
-                E headRecord = queue.remove();
-                sum = sum - headRecord.getValue().doubleValue();
-            }
+        while ((!queue.isEmpty()) && getActualWindowSize(record) > timeFrameInMilliSeconds) {
+            E headRecord = queue.remove();
+            sum = sum - headRecord.getValue().doubleValue();
         }
-        queue.offer(record);
+        queue.add(record);
         sum = sum + record.getValue().doubleValue();
         return sum / queue.size();
     }
 
     private long getActualWindowSize(E record) {
-        return record.getTimestamp().getTime() - Objects.requireNonNull(queue.peek()).getTimestamp().getTime();
+        return record.getTimestamp().getTime() - queue.element().getTimestamp().getTime();
     }
 }

@@ -5,7 +5,7 @@ Exercise: Sliding window average
 - On each record it returns a value average over a sliding time window. The sliding window ends at the timestamp of the last record and its beginning is at lastTimestamp – windowLength, where windowLength is provided as a parameter on the object creation.
 
 ### Moving Average
-In statistics, a moving average (rolling average or running average) is a calculation to analyze data points by creating a series of averages of different subsets of the full data set. It is also called a moving mean (MM)[1] or rolling mean and is a type of finite impulse response filter. Variations include: simple, cumulative, or weighted forms (described below).
+In statistics, a moving average (rolling average or running average) is a calculation to analyze data inventories by creating a series of averages of different subsets of the full data set. It is also called a moving mean (MM)[1] or rolling mean and is a type of finite impulse response filter. Variations include: simple, cumulative, or weighted forms (described below).
 
 Given a series of numbers and a fixed subset size, the first element of the moving average is obtained by taking the average of the initial fixed subset of the number series. Then the subset is modified by "shifting forward"; that is, excluding the first number of the series and including the next value in the subset.
 
