@@ -12,12 +12,12 @@ import static com.ha.utility.DateUtils.toTimestamp;
 
 public class TestDataRepository {
 
-    public static List<Point> getPointsFromTestFile() {
+    public static List<StockPrice> getPricesFromTestFile() {
         String filePath = Objects.requireNonNull(TestDataRepository.class.getClassLoader().getResource("test-data.csv")).getPath();
         try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
             return stream.map(line -> {
                 String[] strings = line.split(",", 2);
-                return new Point(Integer.valueOf(strings[0]), toTimestamp(strings[1]));
+                return new StockPrice(Double.valueOf(strings[0]), toTimestamp(strings[1]));
             }).collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException(e);

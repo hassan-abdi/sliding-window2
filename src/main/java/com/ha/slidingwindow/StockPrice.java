@@ -2,18 +2,18 @@ package com.ha.slidingwindow;
 
 import java.sql.Timestamp;
 
-public class Point implements Comparable<Point>, ChronologicalRecord {
+public class StockPrice implements Comparable<StockPrice>, ChronologicalRecord {
 
-    private final Integer value;
+    private final Double value;
     private final Timestamp timestamp;
 
-    public Point(Integer value, Timestamp timestamp) {
+    public StockPrice(Double value, Timestamp timestamp) {
         this.value = value;
         this.timestamp = timestamp;
     }
 
     @Override
-    public int compareTo(Point o) {
+    public int compareTo(StockPrice o) {
         return this.timestamp.compareTo(o.timestamp);
     }
 
@@ -26,7 +26,7 @@ public class Point implements Comparable<Point>, ChronologicalRecord {
     }
 
     @Override
-    public Integer getValue() {
+    public Double getValue() {
         return value;
     }
 

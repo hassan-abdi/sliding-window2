@@ -5,38 +5,64 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ha.slidingwindow.TestDataRepository.getPointsFromTestFile;
+import static com.ha.slidingwindow.TestDataRepository.getPricesFromTestFile;
 import static com.ha.utility.DateUtils.toTimestamp;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ChronologicalMovingAverageTest {
 
     @Test
-    public void calculateAverageWithSimpleMovingWindow(){
-        MovingAverage<Point> movingAverage = new ChronologicalMovingAverage<>(2);
-        double average1 = movingAverage.next(new Point(10, toTimestamp("Nov 12, 2018 13:02:56.12345678")));
-        double average2 = movingAverage.next(new Point(18, toTimestamp("Nov 12, 2018 13:02:56.12345679")));
-        double average3 = movingAverage.next(new Point(12, toTimestamp("Nov 12, 2018 13:02:56.12345680")));
-        double average4 = movingAverage.next(new Point(8, toTimestamp("Nov 12, 2018 13:02:56.12345681")));
-        double average5 = movingAverage.next(new Point(1, toTimestamp("Nov 12, 2018 13:02:56.12345682")));
-        assertEquals(10, average1);
-        assertEquals(14, average2);
-        assertTrue(13.33 - average3 < 1);
-        assertEquals(12, average4);
-        assertTrue(9.8 - average5 < 1);
+    public void calculateAverageWithSimpleMovingWindow() {
+        final long oneMonth = 30 * 24 * 60 * 60 * 1000L;
+        MovingAverage<Inventory> movingAverage = new ChronologicalMovingAverage<>(oneMonth);
+        double average;
+        average = movingAverage.next(new Inventory(1000, toTimestamp("Jan 12, 2018 13:02:56.123")));
+        assertEquals(1000, average);
+        average = movingAverage.next(new Inventory(1050, toTimestamp("Jan 13, 2018 13:02:56.123")));
+        assertEquals(1025, average);
+        average = movingAverage.next(new Inventory(1070, toTimestamp("Jan 14, 2018 13:02:56.123")));
+        assertEquals(1040, average);
+        average = movingAverage.next(new Inventory(1090, toTimestamp("Feb 12, 2018 13:02:56.123")));
+        assertEquals(1070, average);
+        average = movingAverage.next(new Inventory(1124, toTimestamp("Feb 17, 2018 13:02:56.123")));
+        assertEquals(1107, average);
+        average = movingAverage.next(new Inventory(1140, toTimestamp("Mar 12, 2018 13:02:56.123")));
+        assertEquals(1118, average);
+        average = movingAverage.next(new Inventory(1180, toTimestamp("Mar 19, 2018 13:02:56.123")));
+        assertEquals(1148, average);
+        average = movingAverage.next(new Inventory(1189, toTimestamp("Apr 12, 2018 13:02:56.123")));
+        assertEquals(1184.5, average);
+        average = movingAverage.next(new Inventory(1191, toTimestamp("Apr 21, 2018 13:02:56.123")));
+        assertEquals(1190, average);
+        average = movingAverage.next(new Inventory(1120, toTimestamp("Apr 25, 2018 13:02:56.123")));
+        assertEquals(1166.66, round(average));
+        average = movingAverage.next(new Inventory(1175, toTimestamp("May 01, 2018 13:02:56.123")));
+        assertEquals(1168.75, round(average));
+        average = movingAverage.next(new Inventory(1190, toTimestamp("May 12, 2018 13:02:56.123")));
+        assertEquals(1173.0, round(average));
+        average = movingAverage.next(new Inventory(1100, toTimestamp("May 17, 2018 13:02:56.123")));
+        assertEquals(1155.2, round(average));
+        average = movingAverage.next(new Inventory(1090, toTimestamp("May 24, 2018 13:02:56.123")));
+        assertEquals(1135.0, round(average));
     }
 
     @Test
-    public void calculateAverageWithFileMovingWindow(){
-        List<Point> points = getPointsFromTestFile();
-        assertEquals(36, points.size());
+    public void calculateAverageWithFileMovingWindow() {
+        final long fiveMinutes = 5 * 60 * 1000L;
+        List<StockPrice> stockPrices = getPricesFromTestFile();
+        assertEquals(36, stockPrices.size());
         List<Double> actual = new ArrayList<>();
-        MovingAverage<Point> movingAverage = new ChronologicalMovingAverage<>(5);
-        points.forEach(point -> actual.add(movingAverage.next(point)));
+        MovingAverage<StockPrice> movingAverage = new ChronologicalMovingAverage<>(fiveMinutes);
+        stockPrices.forEach(stockPrice -> actual.add(movingAverage.next(stockPrice)));
         assertFalse(actual.isEmpty());
-        assertEquals(123, actual.get(0));
-        assertEquals(125, actual.get(1));
-        assertEquals(157.25, actual.get(3));
-        assertEquals(163.4, actual.get(4));
+        assertEquals(123.5, actual.get(0));
+        assertEquals(125.5, actual.get(1));
+        assertEquals(157.75, actual.get(3));
+        assertEquals(163.9, actual.get(4));
+        assertEquals(142.0, actual.get(actual.size() - 1));
+    }
+
+    private double round(double value) {
+        return Math.floor(value * 100) / 100;
     }
 }
