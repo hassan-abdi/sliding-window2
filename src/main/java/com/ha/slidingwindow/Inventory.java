@@ -19,7 +19,7 @@ public class Inventory implements Comparable<Inventory>, ChronologicalRecord {
 
     @Override
     public String toString() {
-        return "Point{" +
+        return "Inventory{" +
                 "value=" + value +
                 ", timestamp=" + timestamp +
                 '}';
