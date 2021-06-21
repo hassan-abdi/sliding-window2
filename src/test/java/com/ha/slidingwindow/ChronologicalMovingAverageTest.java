@@ -13,8 +13,11 @@ public class ChronologicalMovingAverageTest {
 
     @Test
     public void calculateAverageWithSimpleMovingWindow() {
-        final long oneMonth = 30 * 24 * 60 * 60 * 1000L;
-        MovingAverage<Inventory> movingAverage = new ChronologicalMovingAverage<>(oneMonth);
+        MovingAverage<Inventory> movingAverage = MovingAverageBuilder
+                .newBuilder()
+                .chronological()
+                .withMonth(1)
+                .build();
         double average;
         average = movingAverage.next(new Inventory(1000, toTimestamp("Jan 12, 2018 13:02:56.123")));
         assertEquals(1000, average);
@@ -48,11 +51,14 @@ public class ChronologicalMovingAverageTest {
 
     @Test
     public void calculateAverageWithFileMovingWindow() {
-        final long fiveMinutes = 5 * 60 * 1000L;
         List<StockPrice> stockPrices = getPricesFromTestFile();
         assertEquals(36, stockPrices.size());
         List<Double> actual = new ArrayList<>();
-        MovingAverage<StockPrice> movingAverage = new ChronologicalMovingAverage<>(fiveMinutes);
+        MovingAverage<StockPrice> movingAverage = MovingAverageBuilder
+                .newBuilder()
+                .chronological()
+                .withMinutes(5)
+                .build();
         stockPrices.forEach(stockPrice -> actual.add(movingAverage.next(stockPrice)));
         assertFalse(actual.isEmpty());
         assertEquals(123.5, actual.get(0));
