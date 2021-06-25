@@ -15,7 +15,7 @@ public class ChronologicalMovingAverage<E extends ChronologicalRecord> implement
     }
 
     @Override
-    public double next(E record) {
+    public synchronized double next(E record) {
         while ((!queue.isEmpty()) && getActualWindowSize(record) > timeFrameInMilliSeconds) {
             E headRecord = queue.remove();
             sum = sum - headRecord.getValue().doubleValue();
